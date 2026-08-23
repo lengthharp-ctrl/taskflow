@@ -1,5 +1,11 @@
 # TaskFlow - 团队任务管理 API
 
+[![CI](https://github.com/lengthharp-ctrl/taskflow/actions/workflows/ci.yml/badge.svg)](https://github.com/lengthharp-ctrl/taskflow/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/Python-3.12-blue)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688)](https://fastapi.tiangolo.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791)](https://www.postgresql.org/)
+[![Coverage](https://img.shields.io/badge/coverage-85%25-brightgreen)]()
+
 面向小团队的任务管理后端服务：注册登录、项目与成员管理、任务流转、评论系统，全部接口带 JWT 鉴权与项目成员级权限校验。
 
 > 在线 Demo：[https://taskflow-api-eena.onrender.com](https://taskflow-api-eena.onrender.com)
