@@ -2,9 +2,11 @@
 
 面向小团队的任务管理后端服务：注册登录、项目与成员管理、任务流转、评论系统，全部接口带 JWT 鉴权与项目成员级权限校验。
 
-> 在线 Demo：`https://<你的服务>.onrender.com`（部署后替换）
+> 在线 Demo：[https://taskflow-api-eena.onrender.com](https://taskflow-api-eena.onrender.com)
 >
-> 在线接口文档：`https://<你的服务>.onrender.com/docs`
+> 在线接口文档：[https://taskflow-api-eena.onrender.com/docs](https://taskflow-api-eena.onrender.com/docs)
+>
+> （Render 免费层，15 分钟无请求会休眠，首次访问需冷启动约 30 秒）
 
 ![API 文档截图](docs/screenshots/docs.png)
 
@@ -33,6 +35,15 @@
 - 权限校验：只有项目成员可访问项目数据，管理操作仅限管理员
 - 统一响应格式 + 全局异常处理
 - `/docs` 在线接口文档
+
+## 项目亮点
+
+- **两级权限模型**：项目创建者自动成为管理员；任务/评论操作要求项目成员，项目管理操作（改项目、加/移除成员）要求管理员，评论修改限作者、删除限作者或管理员——通过 FastAPI 依赖注入实现，校验逻辑集中、可复用。
+- **任务状态机校验**：状态严格按 `待办 → 进行中 → 已完成` 推进，已完成可重新打开，非法流转直接返回 422，避免脏数据。
+- **统一查询构建器**：`core/query.py` 封装了筛选（字段过滤 + 关键字搜索）、分页（offset/limit）、排序（多字段、前缀 `-` 倒序），所有列表接口复用同一套逻辑，新增资源零重复代码。
+- **统一响应格式 + 全局异常处理**：所有接口返回 `{code, message, data}`，业务异常、HTTP 异常、校验异常统一拦截转换，前端对接成本低。
+- **高测试覆盖率**：99 个测试用例，覆盖率 85%，覆盖正常 + 异常路径（未登录、无权限、参数错误、资源不存在、非法状态流转等）；默认内存 SQLite + function 级事务回滚保证用例隔离，支持切换 PostgreSQL 测试库。
+- **工程化交付**：Docker 多阶段构建、Docker Compose 一键启动、Alembic 数据库迁移（upgrade/downgrade 双向验证）、Render Blueprint 一键部署（render.yaml 声明 Web Service + PostgreSQL + 环境变量）。
 
 ## 快速开始
 
