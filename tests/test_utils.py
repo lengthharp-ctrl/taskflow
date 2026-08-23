@@ -10,6 +10,7 @@ from app.core.security import (
     hash_password,
     verify_password,
 )
+from app.core.config import Settings
 
 
 def test_password_hash_and_verify():
@@ -41,3 +42,24 @@ def test_expired_token_rejected():
 def test_garbage_token_rejected():
     with pytest.raises(JWTError):
         decode_token("not-a-jwt")
+
+
+def test_async_database_url_normalization():
+    assert (
+        Settings(DATABASE_URL="postgres://u:p@host:5432/db").async_database_url
+        == "postgresql+asyncpg://u:p@host:5432/db"
+    )
+    assert (
+        Settings(DATABASE_URL="postgresql://u:p@host:5432/db").async_database_url
+        == "postgresql+asyncpg://u:p@host:5432/db"
+    )
+    assert (
+        Settings(
+            DATABASE_URL="postgresql+asyncpg://u:p@host:5432/db"
+        ).async_database_url
+        == "postgresql+asyncpg://u:p@host:5432/db"
+    )
+    assert (
+        Settings(DATABASE_URL="sqlite+aiosqlite:///:memory:").async_database_url
+        == "sqlite+aiosqlite:///:memory:"
+    )

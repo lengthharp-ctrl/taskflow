@@ -1,4 +1,5 @@
 from functools import lru_cache
+from urllib.parse import urlsplit, urlunsplit
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -37,6 +38,17 @@ class Settings(BaseSettings):
             if origin.strip()
         ]
 
+    @property
+    def async_database_url(self) -> str:
+        """统一为 asyncpg 驱动需要的连接串。
+
+        Render Blueprint 注入的 DATABASE_URL 通常是 postgres:// 或
+        postgresql:// 格式，SQLAlchemy 异步模式需要 postgresql+asyncpg://。
+        """
+        parts = urlsplit(self.DATABASE_URL)
+        if parts.scheme in ("postgres", "postgresql"):
+            return urlunsplit(("postgresql+asyncpg",) + parts[1:])
+        return self.DATABASE_URL
 
 @lru_cache
 def get_settings() -> Settings:
