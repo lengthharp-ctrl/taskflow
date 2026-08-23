@@ -241,6 +241,8 @@ erDiagram
 4. 部署后访问 `/docs`。
 
 > 注意：Render 免费 PostgreSQL 约 90 天过期，建议到期前用 `pg_dump` 导出备份，再创建新实例并迁移。
+>
+> 提示：Render 免费层 Web Service 约 15 分钟无请求会进入休眠，下次访问需要冷启动约 30 秒，属正常现象。
 
 ## 后续优化
 
